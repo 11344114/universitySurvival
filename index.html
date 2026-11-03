@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大學生求生記｜University Survival Game</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">UNIVERSITY SURVIVAL GAME · GROUP 4</p>
+        <h1>大學生<span>求生記</span></h1>
+        <p class="tagline">一起活過大學吧！每一次選擇，都在定義你的校園人生。</p>
+      </div>
+      <button class="outline-button" id="rulesButton">遊戲說明</button>
+    </header>
+
+    <section id="setupScreen" class="screen">
+      <div class="paper-panel setup-panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">START YOUR CAMPUS STORY</p>
+            <h2>建立你的大學生活</h2>
+          </div>
+          <span class="sticker">2–6 PLAYERS</span>
+        </div>
+        <label class="field-label" for="playerCount">玩家人數</label>
+        <select id="playerCount" class="select-input">
+          <option value="2">2 位玩家</option>
+          <option value="3">3 位玩家</option>
+          <option value="4" selected>4 位玩家</option>
+          <option value="5">5 位玩家</option>
+          <option value="6">6 位玩家</option>
+        </select>
+        <div id="playerSetup" class="player-setup"></div>
+        <button class="primary-button wide" id="startButton">開始新遊戲 <span>→</span></button>
+        <p class="fine-print">每位玩家選擇一種生存方式。圖片空間可替換為你的原創角色素材。</p>
+      </div>
+      <aside class="setup-aside">
+        <div class="doodle-card">
+          <div class="doodle">✦</div>
+          <div class="big-number">128</div>
+          <p>學分門檻</p>
+          <small>或任一玩家完成 8 圈，立即進入畢業結算。</small>
+        </div>
+        <div class="how-card">
+          <h3>HOW TO PLAY</h3>
+          <ol>
+            <li>抽取角色，設定初始資源</li>
+            <li>擲骰並走過校園格子</li>
+            <li>累積學分、金錢、人際與經歷</li>
+            <li>在有限精神力下活出最高總分</li>
+          </ol>
+        </div>
+      </aside>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="game-topbar">
+        <div>
+          <p class="eyebrow">CAMPUS YEAR <span id="yearLabel">1</span> · ROUND <span id="roundLabel">1</span></p>
+          <h2 id="turnLabel">輪到你了</h2>
+        </div>
+        <div class="top-actions">
+          <span class="goal-chip">目標：128 學分 / 8 圈</span>
+          <button class="outline-button" id="newGameButton">重新開始</button>
+        </div>
+      </div>
+      <div class="game-layout">
+        <section class="board-wrap">
+          <div class="board" id="board"></div>
+          <div class="board-legend">
+            <span><i class="legend-dot course"></i>學業</span>
+            <span><i class="legend-dot life"></i>生活</span>
+            <span><i class="legend-dot chance"></i>事件</span>
+            <span><i class="legend-dot choice"></i>選擇</span>
+          </div>
+        </section>
+        <aside class="sidebar">
+          <div class="paper-panel action-panel">
+            <div class="turn-ribbon">CURRENT TURN</div>
+            <div class="active-player" id="activePlayer"></div>
+            <button class="dice-button" id="rollButton"><span class="dice-face" id="diceFace">?</span><b>擲骰子</b><small>點擊骰子前進</small></button>
+            <div id="actionHint" class="action-hint">準備好踏出第一步了嗎？</div>
+          </div>
+          <div class="paper-panel compact-panel">
+            <div class="panel-heading"><h3>玩家狀態</h3><span id="playerCountLabel"></span></div>
+            <div id="scoreboard" class="scoreboard"></div>
+          </div>
+          <div class="paper-panel compact-panel log-panel">
+            <div class="panel-heading"><h3>校園日誌</h3><span>LIVE</span></div>
+            <div id="eventLog" class="event-log"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="eventModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button class="modal-close" id="closeModal" aria-label="關閉">×</button>
+      <p class="eyebrow" id="modalKicker">CAMPUS EVENT</p>
+      <div class="event-icon" id="modalIcon">✦</div>
+      <h2 id="modalTitle"></h2>
+      <p id="modalText"></p>
+      <div id="modalChoices" class="modal-choices"></div>
+      <button class="primary-button wide hidden" id="modalContinue">繼續</button>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="rulesModal" role="dialog" aria-modal="true">
+    <div class="modal-card rules-card">
+      <button class="modal-close" id="closeRules" aria-label="關閉">×</button>
+      <p class="eyebrow">QUICK RULES</p>
+      <h2>大學生求生守則</h2>
+      <div class="rules-grid">
+        <div><b>移動</b><p>輪到你時擲一次骰子，沿著校園地圖前進。</p></div>
+        <div><b>資源</b><p>課程換學分、打工換金錢，社交累積人際，事件帶來經歷。</p></div>
+        <div><b>精神</b><p>精神歸零會 Burnout，本回合仍可行動，但會失去額外獎勵。</p></div>
+        <div><b>結算</b><p>學分達 128 或有人走完 8 圈，全員依公式計算總分。</p></div>
+      </div>
+      <button class="primary-button wide" id="rulesOkay">我準備好了</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
